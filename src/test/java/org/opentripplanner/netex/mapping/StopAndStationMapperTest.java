@@ -294,8 +294,8 @@ class StopAndStationMapperTest {
       StopModel.of(),
       DEFAULT_TIME_ZONE,
       DataImportIssueStore.NOOP,
-      false,
-      routeToCentroidStopPlaceIds
+      routeToCentroidStopPlaceIds,
+      false
     );
 
     stopMapper.mapParentAndChildStops(

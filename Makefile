@@ -8,6 +8,7 @@ JS_FILESPATH=./src/client/js/otp
 JS_FILES = $(shell find $(JS_FILESPATH)/ -name '*.js')
 LOCALE_FILES = $(shell find $(LOCALE_FOLDER)/ -name '*.po')
 LAN=sl_SI
+IMAGE=open-trip-planner
 
 .PHONY: all
 all: $(LOCALE_FILES)
@@ -37,3 +38,10 @@ update_js: $(LOCALE_FILES)
 init:
 	#$(PYBABEL) init --domain "$(LAN)" --locale "$(LAN)" --input-file $(TEMPLATE_FILE) --output-file $(LOCALE_FOLDER)/"$(LAN).po";
 	msginit -l "$(LAN)" -i $(TEMPLATE_FILE) -o "$(LOCALE_FOLDER)/$(LAN).po";
+
+
+build:
+	docker container rm $(IMAGE) || echo 'Does not exist'
+	docker build . --progress=plain -t $(IMAGE)
+	docker run --name $(IMAGE) $(IMAGE) ls
+	docker cp $(IMAGE):/app/otp.jar ./target/

@@ -1,5 +1,6 @@
 package org.opentripplanner.openstreetmap.model;
 
+import java.util.HashSet;
 import java.util.Set;
 import org.locationtech.jts.geom.Coordinate;
 import org.opentripplanner.street.model.StreetTraversalPermission;
@@ -72,7 +73,16 @@ public class OSMNode extends OSMWithTags {
     if (isMotorVehicleBarrier()) {
       permission = permission.remove(StreetTraversalPermission.CAR);
     }
-    return super.overridePermissions(permission);
+    permission = super.overridePermissions(permission);
+
+    // Custom check if the barrier is a gate, lift_gate or bollard, still allow it.
+    if (this.isBarrier()) {
+      if (this.isOneOfTags("barrier", Set.of("gate", "lift_gate", "bollard"))) {
+        return StreetTraversalPermission.ALL;
+      }
+    }
+
+    return permission;
   }
 
   @Override
